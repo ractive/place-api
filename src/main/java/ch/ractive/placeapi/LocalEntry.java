@@ -1,10 +1,12 @@
 package ch.ractive.placeapi;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 
 @Data
 public class LocalEntry {
@@ -19,33 +21,15 @@ public class LocalEntry {
         public static class OpeningHours {
             @Data
             public static class OpeningHoursDefinition {
-                @Data
-                public static class Days {
-                    @Data
-                    public static class OpenRange {
-                        private LocalTime start;
-                        private LocalTime end;
-                        private String type;
-                    }
-
-                    @JsonProperty("monday")
-                    private List<OpenRange> monday;
-                    @JsonProperty("tuesday")
-                    private List<OpenRange> tuesday;
-                    @JsonProperty("wednesday")
-                    private List<OpenRange> wednesday;
-                    @JsonProperty("thursday")
-                    private List<OpenRange> thursday;
-                    @JsonProperty("friday")
-                    private List<OpenRange> friday;
-                    @JsonProperty("saturday")
-                    private List<OpenRange> saturday;
-                    @JsonProperty("sunday")
-                    private List<OpenRange> sunday;
+                @Data @AllArgsConstructor
+                public static class OpenRange {
+                    private LocalTime start;
+                    private LocalTime end;
+                    private String type;
                 }
 
                 @JsonProperty("days")
-                private Days days;
+                private Map<String, List<OpenRange>> days;
             }
 
             @JsonProperty("opening_hours")
