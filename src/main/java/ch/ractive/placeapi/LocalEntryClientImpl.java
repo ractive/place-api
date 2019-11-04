@@ -9,11 +9,10 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriTemplate;
 
 import javax.annotation.PostConstruct;
-import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class PlaceClientImpl implements PlaceClient {
+public class LocalEntryClientImpl implements LocalEntryClient {
     private final RestTemplateBuilder restTemplateBuilder;
 
     private RestTemplate restTemplate;

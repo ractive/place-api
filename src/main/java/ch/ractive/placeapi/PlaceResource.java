@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/places")
 public class PlaceResource {
-    private final PlaceClient placeClient;
+    private final LocalEntryClient localEntryClient;
 
     @RequestMapping("/{placeId}")
     public PlaceRepresentation getPlaceById(@PathVariable("placeId") String placeId) {
-        return convert(placeClient.getLocalEntryById(placeId));
+        return convert(localEntryClient.getLocalEntryById(placeId));
     }
 
     private PlaceRepresentation convert(LocalEntry localEntry) {
