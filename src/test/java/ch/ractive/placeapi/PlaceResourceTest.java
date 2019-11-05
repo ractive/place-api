@@ -38,11 +38,6 @@ class PlaceResourceTest {
                         new OpenRange(LocalTime.of(18, 30), LocalTime.of(0, 0), "OPEN")
                 ));
         weekdays.put(
-                "friday", List.of(
-                        new OpenRange(LocalTime.of(11, 30), LocalTime.of(15, 0), "OPEN"),
-                        new OpenRange(LocalTime.of(18, 30), LocalTime.of(0, 0), "OPEN")
-                ));
-        weekdays.put(
                 "saturday", List.of(
                         new OpenRange(LocalTime.of(18, 0), LocalTime.of(0, 0), "OPEN")
                 ));
@@ -60,10 +55,12 @@ class PlaceResourceTest {
 
         // then
         assertThat(placeRepresentation.getOpeningHoursRanges()).containsExactly(
-                new OpeningHoursRange("tuesday", "friday", List.of(
+                new OpeningHoursRange("monday", "monday", List.of()),
+                new OpeningHoursRange("tuesday", "thursday", List.of(
                         new LocalTimeRange(LocalTime.of(11, 30), LocalTime.of(15, 0)),
                         new LocalTimeRange(LocalTime.of(18, 30), LocalTime.of(0, 0))
                 )),
+                new OpeningHoursRange("friday", "friday", List.of()),
                 new OpeningHoursRange("saturday", "saturday", List.of(
                         new LocalTimeRange(LocalTime.of(18, 0), LocalTime.of(0, 0))
                 )),
