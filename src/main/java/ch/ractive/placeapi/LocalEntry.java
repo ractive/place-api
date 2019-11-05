@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 public class LocalEntry {
@@ -18,7 +19,7 @@ public class LocalEntry {
 
     @Data
     public static class OpeningHours {
-        @Data @AllArgsConstructor
+        @Data @AllArgsConstructor @NoArgsConstructor
         public static class OpenRange {
             private LocalTime start;
             private LocalTime end;
