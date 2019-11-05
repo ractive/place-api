@@ -1,16 +1,16 @@
 package ch.ractive.placeapi;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import ch.ractive.placeapi.LocalEntry.OpeningHours.OpenRange;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,13 +25,13 @@ public class PlaceResource {
     }
 
     protected static PlaceRepresentation convert(LocalEntry localEntry) {
-        var days = localEntry.getAssets().getOpeningHours().getOpeningHours().getDays();
+        var days = localEntry.getOpeningHours().getDays();
 
         List<PlaceRepresentation.OpeningHoursRange> openingHoursRanges = new ArrayList<>();
 
         String weekdayStart = null;
         String weekdayEnd = null;
-        List<LocalEntry.Assets.OpeningHours.OpeningHoursDefinition.OpenRange> lastOpenRange = null;
+        List<LocalEntry.OpeningHours.OpenRange> lastOpenRange = null;
 
         for (var openRangeEntry : days.entrySet()) {
             var weekday = openRangeEntry.getKey();
@@ -61,7 +61,7 @@ public class PlaceResource {
         return placeRepresentation;
     }
 
-    private static PlaceRepresentation.OpeningHoursRange createOpeningHoursRange(String weekdayStart, String weekdayEnd, List<LocalEntry.Assets.OpeningHours.OpeningHoursDefinition.OpenRange> lastOpenRange) {
+    private static PlaceRepresentation.OpeningHoursRange createOpeningHoursRange(String weekdayStart, String weekdayEnd, List<OpenRange> lastOpenRange) {
         return new PlaceRepresentation.OpeningHoursRange(
                 weekdayStart,
                 weekdayEnd,

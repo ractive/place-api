@@ -1,17 +1,17 @@
 package ch.ractive.placeapi;
 
-import ch.ractive.placeapi.LocalEntry.Assets.OpeningHours.OpeningHoursDefinition.OpenRange;
-import ch.ractive.placeapi.PlaceRepresentation.OpeningHoursRange;
-import ch.ractive.placeapi.PlaceRepresentation.OpeningHoursRange.LocalTimeRange;
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalTime;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+
+import ch.ractive.placeapi.LocalEntry.OpeningHours.OpenRange;
+import ch.ractive.placeapi.PlaceRepresentation.OpeningHoursRange;
+import ch.ractive.placeapi.PlaceRepresentation.OpeningHoursRange.LocalTimeRange;
 
 class PlaceResourceTest {
 
@@ -20,9 +20,7 @@ class PlaceResourceTest {
         // given
         LocalEntry localEntry = new LocalEntry();
 
-        LocalEntry.Assets assets = new LocalEntry.Assets();
-        LocalEntry.Assets.OpeningHours openingHours = new LocalEntry.Assets.OpeningHours();
-        LocalEntry.Assets.OpeningHours.OpeningHoursDefinition openingHoursDefinition = new LocalEntry.Assets.OpeningHours.OpeningHoursDefinition();
+        LocalEntry.OpeningHours openingHours = new LocalEntry.OpeningHours();
         Map<String, List<OpenRange>> weekdays = new LinkedHashMap<>();
         weekdays.put(
                 "tuesday", List.of(
@@ -53,11 +51,9 @@ class PlaceResourceTest {
                         new OpenRange(LocalTime.of(11, 30), LocalTime.of(15, 0), "OPEN")
                 ));
 
-        openingHoursDefinition.setDays(weekdays);
+        openingHours.setDays(weekdays);
 
-        openingHours.setOpeningHours(openingHoursDefinition);
-        assets.setOpeningHours(openingHours);
-        localEntry.setAssets(assets);
+        localEntry.setOpeningHours(openingHours);
 
         // when
         PlaceRepresentation placeRepresentation = PlaceResource.convert(localEntry);
