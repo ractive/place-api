@@ -37,40 +37,44 @@ public class PlaceResource {
     }
 
     protected static PlaceRepresentation convert(LocalEntry localEntry) {
-        TreeMap<String, List<OpenRange>> sortedDays = new TreeMap<>(Comparator.comparing(k -> dayOfWeek(k).getValue()));
+        var sortedDays = new TreeMap<String, List<OpenRange>>(Comparator.comparing(k -> dayOfWeek(k).getValue()));
         sortedDays.putAll(localEntry.getOpeningHours().getDays());
         // All weekdays should have a value
         Arrays.stream(DayOfWeek.values())
             .forEach(value -> sortedDays.putIfAbsent(value.name().toLowerCase(), List.of()));
 
-        List<PlaceRepresentation.OpeningHoursRange> openingHoursRanges = new ArrayList<>();
+        List<PlaceRepresentation.OpeningHoursRange> resultingOpeningHoursRanges = new ArrayList<>();
 
         String weekdayStart = null;
         String weekdayEnd = null;
-        List<LocalEntry.OpeningHours.OpenRange> lastOpenRanges = null;
+        List<LocalEntry.OpeningHours.OpenRange> previousOpenRanges = null;
 
+        // Walk through the map with all weekdays and just extend the "weekdayEnd" if the open ranges
+        // are the same on the previous day(s).
+        // Add the opening hours ranges to the resultingOpeningHoursRanges list if there are new open ranges
+        // for the current day.
         for (var openRangeEntry : sortedDays.entrySet()) {
             var weekday = openRangeEntry.getKey();
             var openRanges = openRangeEntry.getValue();
 
-            if (openRanges.equals(lastOpenRanges)) {
+            if (openRanges.equals(previousOpenRanges)) {
                 weekdayEnd = weekday;
             } else {
                 if (weekdayStart != null) {
-                    openingHoursRanges.add(createOpeningHoursRange(weekdayStart, weekdayEnd, lastOpenRanges));
+                    resultingOpeningHoursRanges.add(createOpeningHoursRange(weekdayStart, weekdayEnd, previousOpenRanges));
                 }
                 weekdayStart = weekday;
                 weekdayEnd = weekday;
-                lastOpenRanges = openRanges;
+                previousOpenRanges = openRanges;
             }
         }
 
-        openingHoursRanges.add(createOpeningHoursRange(weekdayStart, weekdayEnd, lastOpenRanges));
+        resultingOpeningHoursRanges.add(createOpeningHoursRange(weekdayStart, weekdayEnd, previousOpenRanges));
 
         PlaceRepresentation placeRepresentation = new PlaceRepresentation(
                 localEntry.getDisplayedWhat(),
                 localEntry.getDisplayedWhere(),
-                openingHoursRanges
+                resultingOpeningHoursRanges
         );
 
         log.info("LocalEntry: {}", localEntry);
